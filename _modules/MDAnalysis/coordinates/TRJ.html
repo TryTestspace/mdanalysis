@@ -4,20 +4,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>MDAnalysis.coordinates.TRJ &#8212; MDAnalysis 0.17.1-dev documentation</title>
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../',
-        VERSION:     '0.17.1-dev',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
@@ -34,8 +26,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body>
+  </head><body>
   
 
     <div class="document">
@@ -109,40 +100,6 @@
 <span class="sd">      *forces* = ``True`` keyword has been supplied.</span>
 
 
-<span class="sd">.. _ascii-trajectories:</span>
-
-<span class="sd">ASCII TRAJ trajectories</span>
-<span class="sd">-----------------------</span>
-
-<span class="sd">ASCII AMBER_ TRJ coordinate files (as defined in `AMBER TRJ format`_)</span>
-<span class="sd">are handled by the :class:`TRJReader`. It is also possible to directly</span>
-<span class="sd">read *bzip2* or *gzip* compressed files.</span>
-
-<span class="sd">AMBER ASCII trajectories are recognised by the suffix &#39;.trj&#39;,</span>
-<span class="sd">&#39;.mdcrd&#39; or &#39;.crdbox (possibly with an additional &#39;.gz&#39; or &#39;.bz2&#39;).</span>
-
-<span class="sd">.. rubric:: Limitations</span>
-
-<span class="sd">* Periodic boxes are only stored as box lengths A, B, C in an AMBER</span>
-<span class="sd">  trajectory; the reader always assumes that these are orthorhombic</span>
-<span class="sd">  boxes.</span>
-
-<span class="sd">* The trajectory does not contain time information so we simply set</span>
-<span class="sd">  the time step to 1 ps (or the user could provide it as kwarg *dt*)</span>
-
-<span class="sd">* No direct access of frames is implemented, only iteration through</span>
-<span class="sd">  the trajectory.</span>
-
-<span class="sd">* Trajectories with fewer than 4 atoms probably fail to be read (BUG).</span>
-
-<span class="sd">* If the trajectory contains exactly *one* atom then it is always</span>
-<span class="sd">  assumed to be non-periodic (for technical reasons).</span>
-
-
-<span class="sd">.. autoclass:: TRJReader</span>
-<span class="sd">   :members:</span>
-
-
 <span class="sd">.. _netcdf-trajectories:</span>
 
 <span class="sd">Binary NetCDF trajectories</span>
@@ -165,15 +122,70 @@
 <span class="sd">   :members:</span>
 
 
+<span class="sd">.. _ascii-trajectories:</span>
+
+<span class="sd">ASCII TRAJ trajectories</span>
+<span class="sd">-----------------------</span>
+
+<span class="sd">ASCII AMBER_ TRJ coordinate files (as defined in `AMBER TRJ format`_)</span>
+<span class="sd">are handled by the :class:`TRJReader`. It is also possible to directly</span>
+<span class="sd">read *bzip2* or *gzip* compressed files.</span>
+
+<span class="sd">AMBER ASCII trajectories are recognised by the suffix &#39;.trj&#39;,</span>
+<span class="sd">&#39;.mdcrd&#39; or &#39;.crdbox (possibly with an additional &#39;.gz&#39; or &#39;.bz2&#39;).</span>
+
+<span class="sd">.. Note::</span>
+
+<span class="sd">   In the AMBER community, these trajectories are often saved with the</span>
+<span class="sd">   suffix &#39;.crd&#39; but this extension conflicts with the CHARMM CRD</span>
+<span class="sd">   format and MDAnalysis *will not correctly autodetect AMBER &quot;.crd&quot;</span>
+<span class="sd">   trajectories*. Instead, explicitly provide the ``format=&quot;TRJ&quot;``</span>
+<span class="sd">   argument to :class:`~MDAnalysis.core.universe.Universe`::</span>
+
+<span class="sd">     u = MDAnalysis.Universe(&quot;top.prmtop&quot;, &quot;traj.crd&quot;, format=&quot;TRJ&quot;)</span>
+
+<span class="sd">   In this way, the AMBER :class:`TRJReader` is used.</span>
+
+
+<span class="sd">.. rubric:: Limitations</span>
+
+<span class="sd">* Periodic boxes are only stored as box lengths A, B, C in an AMBER</span>
+<span class="sd">  trajectory; the reader always assumes that these are orthorhombic</span>
+<span class="sd">  boxes.</span>
+
+<span class="sd">* The trajectory does not contain time information so we simply set</span>
+<span class="sd">  the time step to 1 ps (or the user could provide it as kwarg *dt*)</span>
+
+<span class="sd">* **No direct access of frames is implemented, only iteration through</span>
+<span class="sd">  the trajectory.**</span>
+
+<span class="sd">* Trajectories with fewer than 4 atoms probably fail to be read (BUG).</span>
+
+<span class="sd">* If the trajectory contains exactly *one* atom then it is always</span>
+<span class="sd">  assumed to be non-periodic (for technical reasons).</span>
+
+<span class="sd">* Velocities are currently *not supported* as ASCII trajectories.</span>
+
+<span class="sd">.. autoclass:: TRJReader</span>
+<span class="sd">   :members:</span>
+
+
+
 <span class="sd">.. Links</span>
 
 <span class="sd">.. _AMBER: http://ambermd.org</span>
 <span class="sd">.. _AMBER TRJ format: http://ambermd.org/formats.html#trajectory</span>
-<span class="sd">.. _AMBER netcdf format: http://ambermd.org/netcdf/nctraj.html</span>
-<span class="sd">.. _AMBER netcdf: http://ambermd.org/netcdf/nctraj.html</span>
+<span class="sd">..    The formats page was archived as</span>
+<span class="sd">..    http://www.webcitation.org/query?url=http%3A%2F%2Fambermd.org%2Fformats.html&amp;date=2018-02-11</span>
+<span class="sd">..    Use the archived version if the original disappears. [orbeckst]</span>
+<span class="sd">.. _AMBER netcdf format: http://ambermd.org/netcdf/nctraj.xhtml</span>
+<span class="sd">..    The formats page was archived as</span>
+<span class="sd">..    http://www.webcitation.org/query?url=http%3A%2F%2Fambermd.org%2Fnetcdf%2Fnctraj.xhtml&amp;date=2018-02-11</span>
+<span class="sd">..    Use the archived version if the original disappears. [orbeckst]</span>
+<span class="sd">.. _AMBER netcdf: http://ambermd.org/netcdf/nctraj.xhtml</span>
 <span class="sd">.. _NetCDF: http://www.unidata.ucar.edu/software/netcdf</span>
 <span class="sd">.. _Issue Tracker: https://github.com/MDAnalysis/mdanalysis/issues</span>
-<span class="sd">.. _MDAnalysis mailinglist: http://groups.google.com/group/mdnalysis-discussion</span>
+<span class="sd">.. _MDAnalysis mailinglist: https://groups.google.com/group/mdnalysis-discussion</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span>
@@ -208,8 +220,8 @@
 
 <span class="sd">    .. versionchanged:: 0.10.0</span>
 <span class="sd">       Added ability to contain Forces</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">order</span> <span class="o">=</span> <span class="s1">&#39;C&#39;</span></div>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+    <span class="n">order</span> <span class="o">=</span> <span class="s1">&#39;C&#39;</span>
 
 
 <div class="viewcode-block" id="TRJReader"><a class="viewcode-back" href="../../../documentation_pages/coordinates/TRJ.html#MDAnalysis.coordinates.TRJ.TRJReader">[docs]</a><span class="k">class</span> <span class="nc">TRJReader</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">ReaderBase</span><span class="p">):</span>
@@ -410,15 +422,15 @@
         <span class="c1"># reset ts</span>
         <span class="n">ts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts</span>
         <span class="n">ts</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span></div>
+</div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span>
 
 <div class="viewcode-block" id="TRJReader.close"><a class="viewcode-back" href="../../../documentation_pages/coordinates/TRJ.html#MDAnalysis.coordinates.TRJ.TRJReader.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Close trj trajectory file if it was open.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span> <span class="o">=</span> <span class="kc">None</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span> <span class="o">=</span> <span class="kc">None</span>
 
 
 <div class="viewcode-block" id="NCDFReader"><a class="viewcode-back" href="../../../documentation_pages/coordinates/TRJ.html#MDAnalysis.coordinates.TRJ.NCDFReader">[docs]</a><span class="k">class</span> <span class="nc">NCDFReader</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">ReaderBase</span><span class="p">):</span>
@@ -457,7 +469,7 @@
 <span class="sd">    :class:`scipy.io.netcdf.netcdf_file` prevails, i.e. ``True`` when</span>
 <span class="sd">    *filename* is a file name, ``False`` when *filename* is a file-like object.</span>
 
-<span class="sd">    .. _AMBER NETCDF format: http://ambermd.org/netcdf/nctraj.html</span>
+<span class="sd">    .. _AMBER NETCDF format: http://ambermd.org/netcdf/nctraj.xhtml</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
@@ -494,7 +506,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="s1">&#39;AMBER&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span><span class="o">.</span><span class="n">Conventions</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="ow">or</span>
                 <span class="s1">&#39;AMBER&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span><span class="o">.</span><span class="n">Conventions</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()):</span>
             <span class="n">errmsg</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;NCDF trajectory </span><span class="si">{0}</span><span class="s2"> does not conform to AMBER &quot;</span>
-                      <span class="s2">&quot;specifications, http://ambermd.org/netcdf/nctraj.html &quot;</span>
+                      <span class="s2">&quot;specifications, http://ambermd.org/netcdf/nctraj.xhtml &quot;</span>
                       <span class="s2">&quot;(&#39;AMBER&#39; must be one of the tokens in attribute &quot;</span>
                       <span class="s2">&quot;Conventions)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">))</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">fatal</span><span class="p">(</span><span class="n">errmsg</span><span class="p">)</span>
@@ -560,10 +572,10 @@
         <span class="c1"># load first data frame</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read_frame</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="NCDFReader.parse_n_atoms"><a class="viewcode-back" href="../../../documentation_pages/coordinates/TRJ.html#MDAnalysis.coordinates.TRJ.NCDFReader.parse_n_atoms">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">parse_n_atoms</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">with</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">netcdf</span><span class="o">.</span><span class="n">netcdf_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mmap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">n_atoms</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;atom&#39;</span><span class="p">]</span>
+            <span class="n">n_atoms</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;atom&#39;</span><span class="p">]</span></div>
         <span class="k">return</span> <span class="n">n_atoms</span>
 
     <span class="k">def</span> <span class="nf">_read_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
@@ -627,8 +639,8 @@
 <span class="sd">                  *must* be removed before the file can be closed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span> <span class="o">=</span> <span class="kc">None</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="NCDFReader.Writer"><a class="viewcode-back" href="../../../documentation_pages/coordinates/TRJ.html#MDAnalysis.coordinates.TRJ.NCDFReader.Writer">[docs]</a>    <span class="k">def</span> <span class="nf">Writer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a NCDFWriter for `filename` with the same parameters as this NCDF.</span>
@@ -652,8 +664,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">n_atoms</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;n_atoms&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">)</span>
         <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;remarks&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">remarks</span><span class="p">)</span>
-        <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;dt&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">NCDFWriter</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;dt&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">NCDFWriter</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="NCDFWriter"><a class="viewcode-back" href="../../../documentation_pages/coordinates/TRJ.html#MDAnalysis.coordinates.TRJ.NCDFWriter">[docs]</a><span class="k">class</span> <span class="nc">NCDFWriter</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">WriterBase</span><span class="p">):</span>
@@ -669,7 +681,7 @@
 
 <span class="sd">    Unit cell information is written if available.</span>
 
-<span class="sd">    .. _AMBER NETCDF format: http://ambermd.org/netcdf/nctraj.html</span>
+<span class="sd">    .. _AMBER NETCDF format: http://ambermd.org/netcdf/nctraj.xhtml</span>
 
 
 <span class="sd">    Parameters</span>
@@ -696,7 +708,7 @@
 
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
-<span class="sd">    MDAnalysis uses :mod:`scipy.io.netcdf` to access Amber files, which are in</span>
+<span class="sd">    MDAnalysis uses :mod:`scipy.io.netcdf` to access AMBER files, which are in</span>
 <span class="sd">    netcdf 3 format. Although :mod:`scipy.io.netcdf` is very fast at reading</span>
 <span class="sd">    these files, it is *very* slow when writing, and it becomes slower the</span>
 <span class="sd">    longer the files are. On the other hand, the netCDF4_ package (which</span>
@@ -704,9 +716,9 @@
 <span class="sd">    but slow at reading. Therefore, we try to use :mod:`netCDF4` for writing if</span>
 <span class="sd">    available but otherwise fall back to the slower :mod:`scipy.io.netcdf`.</span>
 
-<span class="sd">    **Amber users** might have a hard time getting netCDF4 to work with a</span>
+<span class="sd">    **AMBER users** might have a hard time getting netCDF4 to work with a</span>
 <span class="sd">    conda-based installation (as discussed in `Issue #506`_) because of the way</span>
-<span class="sd">    that Amber itself handles netcdf: When the Amber environment is loaded, the</span>
+<span class="sd">    that AMBER itself handles netcdf: When the AMBER environment is loaded, the</span>
 <span class="sd">    following can happen when trying to import netCDF4::</span>
 
 <span class="sd">      &gt;&gt;&gt; import netCDF4</span>
@@ -716,18 +728,18 @@
 <span class="sd">          from ._netCDF4 import *</span>
 <span class="sd">      ImportError: /scratch2/miniconda/envs/py35/lib/python3.5/site-packages/netCDF4/_netCDF4.cpython-35m-x86_64-linux-gnu.so: undefined symbol: nc_inq_var_fletcher32</span>
 
-<span class="sd">    The reason for this (figured out via :program:`ldd`) is that Amber builds</span>
+<span class="sd">    The reason for this (figured out via :program:`ldd`) is that AMBER builds</span>
 <span class="sd">    its own NetCDF library that it now inserts into :envvar:`LD_LIBRARY_PATH`</span>
 <span class="sd">    *without the NetCDF4 API and HDF5 bindings*. Since the conda version of</span>
 <span class="sd">    :mod:`netCDF4` was built against the full NetCDF package, the one</span>
-<span class="sd">    :program:`ld` tries to link to at runtime (because Amber requires</span>
-<span class="sd">    :envvar:`LD_LIBRARY_PATH`) is missing some symbols. Removing Amber from the</span>
+<span class="sd">    :program:`ld` tries to link to at runtime (because AMBER requires</span>
+<span class="sd">    :envvar:`LD_LIBRARY_PATH`) is missing some symbols. Removing AMBER from the</span>
 <span class="sd">    environment fixes the import but is not really a convenient solution for</span>
-<span class="sd">    users of Amber.</span>
+<span class="sd">    users of AMBER.</span>
 
 <span class="sd">    At the moment there is no obvious solution if one wants to use</span>
-<span class="sd">    :mod:`netCDF4` and Amber in the same shell session. If you need the fast</span>
-<span class="sd">    writing capabilities of :mod:`netCDF4` then you need to unload your Amber</span>
+<span class="sd">    :mod:`netCDF4` and AMBER in the same shell session. If you need the fast</span>
+<span class="sd">    writing capabilities of :mod:`netCDF4` then you need to unload your AMBER</span>
 <span class="sd">    environment before importing MDAnalysis.</span>
 
 
@@ -901,8 +913,8 @@
 <span class="sd">        bool</span>
 <span class="sd">            Return ``True`` if `ts` contains a valid simulation box</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ts</span> <span class="o">=</span> <span class="n">ts</span> <span class="k">if</span> <span class="n">ts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">dimensions</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span></div>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">ts</span> <span class="k">if</span> <span class="n">ts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts</span></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">dimensions</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
 
 <div class="viewcode-block" id="NCDFWriter.write_next_timestep"><a class="viewcode-back" href="../../../documentation_pages/coordinates/TRJ.html#MDAnalysis.coordinates.TRJ.NCDFWriter.write_next_timestep">[docs]</a>    <span class="k">def</span> <span class="nf">write_next_timestep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;write a new timestep to the trj file</span>
@@ -927,8 +939,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># first time step: analyze data and open trajectory accordingly</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_init_netcdf</span><span class="p">(</span><span class="n">periodic</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_periodic</span><span class="p">(</span><span class="n">ts</span><span class="p">))</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write_next_timestep</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span></div>
+</div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write_next_timestep</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_write_next_timestep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ts</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Write coordinates and unitcell information to NCDF file.</span>
@@ -985,10 +997,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span><span class="o">.</span><span class="n">sync</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">curr_frame</span> <span class="o">+=</span> <span class="mi">1</span>
 
-    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NCDFWriter.close"><a class="viewcode-back" href="../../../documentation_pages/coordinates/TRJ.html#MDAnalysis.coordinates.TRJ.NCDFWriter.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span> <span class="o">=</span> <span class="kc">None</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trjfile</span> <span class="o">=</span> <span class="kc">None</span>
 </pre></div>
 
           </div>
@@ -1029,10 +1041,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../documentation_pages/auxiliary_modules.html">8. Auxiliary modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../documentation_pages/core_modules.html">9. Core modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../documentation_pages/visualization_modules.html">10. Visualization modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../documentation_pages/lib_modules.html">11. Library functions — <code class="docutils literal"><span class="pre">MDAnalysis.lib</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../documentation_pages/version.html">12. Version information for MDAnalysis - <code class="docutils literal"><span class="pre">MDAnalysis.version</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../documentation_pages/units.html">13. Constants and unit conversion — <code class="docutils literal"><span class="pre">MDAnalysis.units</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../documentation_pages/exceptions.html">14. Custom exceptions and warnings — <code class="docutils literal"><span class="pre">MDAnalysis.exceptions</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../documentation_pages/lib_modules.html">11. Library functions — <code class="docutils literal notranslate"><span class="pre">MDAnalysis.lib</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../documentation_pages/version.html">12. Version information for MDAnalysis - <code class="docutils literal notranslate"><span class="pre">MDAnalysis.version</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../documentation_pages/units.html">13. Constants and unit conversion — <code class="docutils literal notranslate"><span class="pre">MDAnalysis.units</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../documentation_pages/exceptions.html">14. Custom exceptions and warnings — <code class="docutils literal notranslate"><span class="pre">MDAnalysis.exceptions</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../documentation_pages/references.html">15. References</a></li>
 </ul>
 
@@ -1047,12 +1059,14 @@
 </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -1063,7 +1077,7 @@
       &copy;2005-2017, Naveen Michaud-Agrawal, Elizabeth J. Denning, Christian Beckstein (logo), Joshua L. Adelman, Shobhit Agarwal, Balasubramanian, Utkarsh Bansal, Jonathan Barnoud, Tone Bengtsen, Alejandro Bernardin, Mateusz Bieniek, Wouter Boomsma, Jose Borreguero, Bart Bruininks, Sébastien Buchoux, Sören von Bülow, David Caplan, Matthieu Chavent, Kathleen Clark, Robert Delgado, John Detlefs, Xavier Deupi, Jan Domanski, David L. Dotson, Lennard van der Feltz, Philip Fowler, Joseph Goose, Richard J. Gowers, Lukas Grossar, Abhinav Gupta, Akshay Gupta, Benjamin Hall, Eugen Hruska, Kyle J. Huston, Joe Jordan, Jon Kapla, Andrew William King, Max Linke, Jinju Lu, Micaela Matta, Robert McGibbon, Manuel Nuno Melo, Dominik 'Rathann' Mierzejewski, Fiona Naughton, Alex Nesterenko, Hai Nguyen, Sang Young Noh, Nabarun Pal, Mattia F. Palermo, Danny Parton, Joshua L. Phillips, Vedant Rathore, Tyler Reddy, Paul Rigor, Carlos Yanez S., Utkarsh Saxena, Sean L. Seyler, Andy Somogyi, Caio S. Souza, Shantanu Srivastava, Lukas Stelzl, Gorman Stock, Matteo Tiberti, Isaac Virshup, Nestor Wendt, Zhiyi Wu, Zhuyi Xue, Juan Eiros Zamora, and Oliver Beckstein.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>
