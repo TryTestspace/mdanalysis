@@ -263,6 +263,11 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;residue_segindex must be len n_residues&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_SR</span> <span class="o">=</span> <span class="n">make_downshift_arrays</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_RS</span><span class="p">,</span> <span class="n">n_segments</span><span class="p">)</span>
 
+<div class="viewcode-block" id="TransTable.copy"><a class="viewcode-back" href="../../../documentation_pages/core/topology.html#MDAnalysis.core.topology.TransTable.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a deepcopy of this Transtable&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_residues</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_segments</span><span class="p">,</span></div>
+                              <span class="n">atom_resindex</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_AR</span><span class="p">,</span> <span class="n">residue_segindex</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_RS</span><span class="p">)</span>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;The shape of the table, (n_atoms, n_residues, n_segments)&quot;&quot;&quot;</span>
@@ -509,6 +514,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">topologyattr</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_TopologyAttr</span><span class="p">(</span><span class="n">topologyattr</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Topology.copy"><a class="viewcode-back" href="../../../documentation_pages/core/topology.html#MDAnalysis.core.topology.Topology.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a deepcopy of this Topology&quot;&quot;&quot;</span>
+        <span class="n">new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># copy the tt</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">tt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tt</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="c1"># remove indices</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="p">(</span><span class="n">Atomindices</span><span class="p">,</span> <span class="n">Resindices</span><span class="p">,</span> <span class="n">Segindices</span><span class="p">)):</span>
+                <span class="k">continue</span>
+            <span class="n">new</span><span class="o">.</span><span class="n">add_TopologyAttr</span><span class="p">(</span><span class="n">attr</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span></div>
+        <span class="k">return</span> <span class="n">new</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">n_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

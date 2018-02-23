@@ -299,7 +299,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">MemoryReader</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stored_order</span> <span class="o">=</span> <span class="n">order</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">coordinate_array</span><span class="p">),</span> <span class="n">order</span><span class="p">)</span>
@@ -346,6 +345,22 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># assume filename is a numpy array</span></div>
         <span class="k">return</span> <span class="n">filename</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">order</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)]</span>
+
+<div class="viewcode-block" id="MemoryReader.copy"><a class="viewcode-back" href="../../../documentation_pages/coordinates/memory.html#MDAnalysis.coordinates.memory.MemoryReader.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a copy of this Memory Reader&quot;&quot;&quot;</span>
+        <span class="n">new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">coordinate_array</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="n">order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stored_order</span><span class="p">,</span>
+            <span class="n">dimensions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ts</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span>
+            <span class="n">dt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ts</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">new</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ts</span><span class="o">.</span><span class="n">frame</span><span class="p">]</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">auxname</span><span class="p">,</span> <span class="n">auxread</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_auxs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">new</span><span class="o">.</span><span class="n">add_auxiliary</span><span class="p">(</span><span class="n">auxname</span><span class="p">,</span> <span class="n">auxread</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+</div>
+        <span class="k">return</span> <span class="n">new</span>        
 
 <div class="viewcode-block" id="MemoryReader.set_array"><a class="viewcode-back" href="../../../documentation_pages/coordinates/memory.html#MDAnalysis.coordinates.memory.MemoryReader.set_array">[docs]</a>    <span class="k">def</span> <span class="nf">set_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coordinate_array</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;fac&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

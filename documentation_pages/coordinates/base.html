@@ -831,6 +831,16 @@ is avoided.</p>
 </div>
 </dd></dl>
 
+<dl class="method">
+<dt id="MDAnalysis.coordinates.base.ReaderBase.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/MDAnalysis/coordinates/base.html#ReaderBase.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MDAnalysis.coordinates.base.ReaderBase.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return independent copy of this Reader.</p>
+<p>New Reader will have its own file handle and can seek/iterate
+independently of the original.</p>
+<p>Will also copy the current state of the Timestep held in
+the original Reader</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="MDAnalysis.coordinates.base.ReaderBase.dt">
 <code class="descname">dt</code><a class="headerlink" href="#MDAnalysis.coordinates.base.ReaderBase.dt" title="Permalink to this definition">¶</a></dt>
@@ -1429,6 +1439,16 @@ is avoided.</p>
 <div class="versionadded">
 <p><span class="versionmodified">New in version 0.7.5.</span></p>
 </div>
+</dd></dl>
+
+<dl class="method">
+<dt id="MDAnalysis.coordinates.base.SingleFrameReaderBase.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/MDAnalysis/coordinates/base.html#SingleFrameReaderBase.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MDAnalysis.coordinates.base.SingleFrameReaderBase.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return independent copy of this Reader.</p>
+<p>New Reader will have its own file handle and can seek/iterate
+independently of the original.</p>
+<p>Will also copy the current state of the Timestep held in
+the original Reader</p>
 </dd></dl>
 
 <dl class="attribute">

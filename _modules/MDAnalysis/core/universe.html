@@ -352,6 +352,12 @@
         <span class="c1"># Universes are anchors by default</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_anchor</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;is_anchor&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
+<div class="viewcode-block" id="Universe.copy"><a class="viewcode-back" href="../../../documentation_pages/core/universe.html#MDAnalysis.core.universe.Universe.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return an independent copy of this Universe&quot;&quot;&quot;</span>
+        <span class="n">new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_topology</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">trajectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">new</span>
+
     <span class="k">def</span> <span class="nf">_generate_from_topology</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># generate Universe version of each class</span>
         <span class="c1"># AG, RG, SG, A, R, S</span>

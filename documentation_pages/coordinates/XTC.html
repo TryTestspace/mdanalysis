@@ -428,6 +428,16 @@ is avoided.</p>
 </div>
 </dd></dl>
 
+<dl class="method">
+<dt id="MDAnalysis.coordinates.XTC.XTCReader.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MDAnalysis.coordinates.XTC.XTCReader.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return independent copy of this Reader.</p>
+<p>New Reader will have its own file handle and can seek/iterate
+independently of the original.</p>
+<p>Will also copy the current state of the Timestep held in
+the original Reader</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="MDAnalysis.coordinates.XTC.XTCReader.dt">
 <code class="descname">dt</code><a class="headerlink" href="#MDAnalysis.coordinates.XTC.XTCReader.dt" title="Permalink to this definition">¶</a></dt>
