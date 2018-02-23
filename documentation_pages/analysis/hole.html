@@ -50,25 +50,26 @@
 </tr>
 </tbody>
 </table>
-<p>With the help of this module, the <strong class="program">hole</strong> program from the <a class="reference external" href="http://www.smartsci.uk/hole/">HOLE</a> suite
+<p>With the help of this module, the <strong class="program">hole</strong> program from the <a class="reference external" href="http://www.holeprogram.org">HOLE</a> suite
 of tools <a class="reference internal" href="#smart1993" id="id1">[Smart1993]</a> <a class="reference internal" href="#smart1996" id="id2">[Smart1996]</a> can be run on frames in a trajectory. Data
 can be combined and analyzed.</p>
-<p><a class="reference external" href="http://www.smartsci.uk/hole/">HOLE</a> must be installed separately and can be obtained in binary form from
-<a class="reference external" href="http://www.smartsci.uk/hole/">http://www.smartsci.uk/hole/</a>. (HOLE is not open source and must be used under
-licence but for academic work, a free (as in “no costs”) version is available.)</p>
+<p><a class="reference external" href="http://www.holeprogram.org">HOLE</a> must be installed separately and can be obtained in binary form
+from <a class="reference external" href="http://www.holeprogram.org/">http://www.holeprogram.org/</a> or as source from
+<a class="reference external" href="https://github.com/osmart/hole2">https://github.com/osmart/hole2</a>. (HOLE is open source and available
+under the Apache v2.0 license.)</p>
 <div class="section" id="examples-for-using-hole">
 <h2>4.4.1.1. Examples for using HOLE<a class="headerlink" href="#examples-for-using-hole" title="Permalink to this headline">¶</a></h2>
 <p>The two classes <a class="reference internal" href="#MDAnalysis.analysis.hole.HOLE" title="MDAnalysis.analysis.hole.HOLE"><code class="xref py py-class docutils literal notranslate"><span class="pre">HOLE</span></code></a> and <a class="reference internal" href="#MDAnalysis.analysis.hole.HOLEtraj" title="MDAnalysis.analysis.hole.HOLEtraj"><code class="xref py py-class docutils literal notranslate"><span class="pre">HOLEtraj</span></code></a> in this module primarily
-act as wrappers around the <strong class="program">hole</strong> program from the <a class="reference external" href="http://www.smartsci.uk/hole/">HOLE</a> suite of
+act as wrappers around the <strong class="program">hole</strong> program from the <a class="reference external" href="http://www.holeprogram.org">HOLE</a> suite of
 tools. They contain many options to set options of <strong class="program">hole</strong>. However,
 the defaults often work well and the following examples should be good starting
-points for applying <a class="reference external" href="http://www.smartsci.uk/hole/">HOLE</a> to other problems.</p>
+points for applying <a class="reference external" href="http://www.holeprogram.org">HOLE</a> to other problems.</p>
 <div class="section" id="single-structure">
 <h3>4.4.1.1.1. Single structure<a class="headerlink" href="#single-structure" title="Permalink to this headline">¶</a></h3>
 <p>The following example runs <strong class="program">hole</strong> on the experimental
 structure of the Gramicidin A (gA) channel. We use the <a class="reference internal" href="#MDAnalysis.analysis.hole.HOLE" title="MDAnalysis.analysis.hole.HOLE"><code class="xref py py-class docutils literal notranslate"><span class="pre">HOLE</span></code></a>
 class, which acts as a wrapper around <strong class="program">hole</strong>. It therefore
-shares some of the limitations of <a class="reference external" href="http://www.smartsci.uk/hole/">HOLE</a>, namely, that it can only
+shares some of the limitations of <a class="reference external" href="http://www.holeprogram.org">HOLE</a>, namely, that it can only
 process PDB files <a class="footnote-reference" href="#holedcd" id="id3">[1]</a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">MDAnalysis.analysis.hole</span> <span class="k">import</span> <span class="n">HOLE</span>
 <span class="kn">from</span> <span class="nn">MDAnalysis.tests.datafiles</span> <span class="k">import</span> <span class="n">PDB_HOLE</span>
@@ -184,9 +185,9 @@ be stored in the dict.</p>
 <dt id="MDAnalysis.analysis.hole.HOLE">
 <em class="property">class </em><code class="descclassname">MDAnalysis.analysis.hole.</code><code class="descname">HOLE</code><span class="sig-paren">(</span><em>filename</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/MDAnalysis/analysis/hole.html#HOLE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MDAnalysis.analysis.hole.HOLE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run <strong class="program">hole</strong> on a single frame or a DCD trajectory.</p>
-<p><strong class="program">hole</strong> is part of the <a class="reference external" href="http://www.smartsci.uk/hole/">HOLE</a> suite of programs. It is used to
+<p><strong class="program">hole</strong> is part of the <a class="reference external" href="http://www.holeprogram.org">HOLE</a> suite of programs. It is used to
 analyze channels and cavities in proteins, especially ion channels.</p>
-<p>Only a subset of all <a class="reference external" href="http://s3.smartsci.uk/hole2/doc/old/hole_d03.html">HOLE control parameters</a> is supported and can be set
+<p>Only a subset of all <a class="reference external" href="http://www.holeprogram.org/doc/old/hole_d03.html">HOLE control parameters</a> is supported and can be set
 with keyword arguments.</p>
 <p><strong class="program">hole</strong> (as a FORTRAN77 program) has a number of limitations when it comes to
 filename lengths (must be shorter than the empirically found
@@ -209,7 +210,7 @@ data such as <a class="reference internal" href="#MDAnalysis.analysis.hole.HOLE.
 <div class="versionchanged">
 <p><span class="versionmodified">Changed in version 0.16.0: </span>Added <cite>raseed</cite> keyword argument.</p>
 </div>
-<p>Set up parameters to run <a class="reference external" href="http://www.smartsci.uk/hole/">HOLE</a> on PDB <em>filename</em>.</p>
+<p>Set up parameters to run <a class="reference external" href="http://www.holeprogram.org">HOLE</a> on PDB <em>filename</em>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -460,7 +461,7 @@ saved to a gzipped data file.</p>
 <code class="descname">create_vmd_surface</code><span class="sig-paren">(</span><em>filename='hole.vmd'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/MDAnalysis/analysis/hole.html#HOLE.create_vmd_surface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MDAnalysis.analysis.hole.HOLE.create_vmd_surface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process HOLE output to create a smooth pore surface suitable for VMD.</p>
 <p>Takes the <code class="xref py py-attr docutils literal notranslate"><span class="pre">sphpdb</span></code> file and feeds it to <strong class="program">sph_process</strong>
-and <strong class="program">sos_triangle</strong> as described under <a class="reference external" href="http://s3.smartsci.uk/hole2/doc/index.html#_producing_a_triangulated_surface_and_visualizing_in_vmd">Visualization of HOLE
+and <strong class="program">sos_triangle</strong> as described under <a class="reference external" href="http://www.holeprogram.org/doc/index.html#_producing_a_triangulated_surface_and_visualizing_in_vmd">Visualization of HOLE
 results</a>.</p>
 <p>Load the output file <em>filename</em> into VMD by issuing in the tcl console</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="n">hole</span><span class="o">.</span><span class="n">vmd</span>
@@ -824,7 +825,7 @@ analyse part of the trajectory.</p>
 <dl class="data">
 <dt id="MDAnalysis.analysis.hole.SIMPLE2_RAD">
 <code class="descclassname">MDAnalysis.analysis.hole.</code><code class="descname">SIMPLE2_RAD</code><em class="property"> = '\nremark: Time-stamp: &lt;2005-11-21 13:57:55 oliver&gt; [OB]\nremark: van der Waals radii: AMBER united atom\nremark: from Weiner et al. (1984), JACS, vol 106 pp765-768\nremark: Simple - Only use one value for each element C O H etc.\nremark: van der Waals radii\nremark: general last\nVDWR C??? ??? 1.85\nVDWR O??? ??? 1.65\nVDWR S??? ??? 2.00\nVDWR N??? ??? 1.75\nVDWR H??? ??? 1.00\nVDWR H?   ??? 1.00\nVDWR P??? ??? 2.10\nremark: ASN, GLN polar H (odd names for these atoms in xplor)\nVDWR E2?  GLN 1.00\nVDWR D2?  ASN 1.00\nremark: amber lone pairs on sulphurs\nVDWR LP?? ??? 0.00\nremark: for some funny reason it wants radius for K even though\nremark: it is on the exclude list\nremark: Use Pauling hydration radius (Hille 2001) [OB]\nVDWR K?   ??? 1.33\nVDWR NA?  ??? 0.95\nVDWR CL?  ??? 1.81\nremark: funny hydrogens in gA structure [OB]\nVDWR 1H?  ??? 1.00\nVDWR 2H?  ??? 1.00\nVDWR 3H?  ??? 1.00\nremark: need bond rad for molqpt option\nBOND C??? 0.85\nBOND N??? 0.75\nBOND O??? 0.7\nBOND S??? 1.1\nBOND H??? 0.5\nBOND P??? 1.0\nBOND ???? 0.85\n'</em><a class="headerlink" href="#MDAnalysis.analysis.hole.SIMPLE2_RAD" title="Permalink to this definition">¶</a></dt>
-<dd><p>Built-in HOLE radii (based on <code class="docutils literal notranslate"><span class="pre">simple.rad</span></code> from the <a class="reference external" href="http://www.smartsci.uk/hole/">HOLE</a> distribution) – van der Waals radii are AMBER united atom from Weiner et al. (1984), JACS, vol 106 pp765-768.
+<dd><p>Built-in HOLE radii (based on <code class="docutils literal notranslate"><span class="pre">simple.rad</span></code> from the <a class="reference external" href="http://www.holeprogram.org">HOLE</a> distribution) – van der Waals radii are AMBER united atom from Weiner et al. (1984), JACS, vol 106 pp765-768.
 <em>Simple</em> - Only use one value for each element C O H etc.
 Added radii for K+, NA+, CL- (Pauling hydration radius from Hille 2002).
 The data file can be written with the convenience function <a class="reference internal" href="#MDAnalysis.analysis.hole.write_simplerad2" title="MDAnalysis.analysis.hole.write_simplerad2"><code class="xref py py-func docutils literal notranslate"><span class="pre">write_simplerad2()</span></code></a>.</p>
@@ -873,7 +874,7 @@ The Pore Dimensions of Gramicidin A. Biophysical Journal 65:2455-2460, 1993.</td
 <tr><td class="label"><a class="fn-backref" href="#id2">[Smart1996]</a></td><td>O.S. Smart, J.G. Neduvelil, X. Wang, B.A. Wallace, and M.S.P. Sansom.
 HOLE: A program for the analysis of the pore dimensions of ion channel
 structural models. J.Mol.Graph., 14:354–360, 1996.
-URL <a class="reference external" href="http://www.smartsci.uk/hole/">http://www.smartsci.uk/hole/</a></td></tr>
+URL <a class="reference external" href="http://www.holeprogram.org/">http://www.holeprogram.org/</a></td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="holedcd" rules="none">

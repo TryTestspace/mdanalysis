@@ -69,11 +69,12 @@
 <span class="sd">can be combined and analyzed.</span>
 
 
-<span class="sd">HOLE_ must be installed separately and can be obtained in binary form from</span>
-<span class="sd">http://www.smartsci.uk/hole/. (HOLE is not open source and must be used under</span>
-<span class="sd">licence but for academic work, a free (as in &quot;no costs&quot;) version is available.)</span>
+<span class="sd">HOLE_ must be installed separately and can be obtained in binary form</span>
+<span class="sd">from http://www.holeprogram.org/ or as source from</span>
+<span class="sd">https://github.com/osmart/hole2. (HOLE is open source and available</span>
+<span class="sd">under the Apache v2.0 license.)</span>
 
-<span class="sd">.. _HOLE: http://www.smartsci.uk/hole/</span>
+<span class="sd">.. _HOLE: http://www.holeprogram.org</span>
 
 
 <span class="sd">Examples for using HOLE</span>
@@ -263,7 +264,7 @@
 <span class="sd">.. [Smart1996] O.S. Smart, J.G. Neduvelil, X. Wang, B.A. Wallace, and M.S.P. Sansom.</span>
 <span class="sd">               HOLE: A program for the analysis of the pore dimensions of ion channel</span>
 <span class="sd">               structural models. J.Mol.Graph., 14:354–360, 1996.</span>
-<span class="sd">               URL http://www.smartsci.uk/hole/</span>
+<span class="sd">               URL http://www.holeprogram.org/</span>
 
 <span class="sd">.. Footnotes</span>
 
@@ -277,6 +278,7 @@
 <span class="sd">              trajectory that MDAnalysis can read &lt;Supported coordinate</span>
 <span class="sd">              formats&gt;` into a sequence of PDB files and runs :class:`HOLE` on</span>
 <span class="sd">              each of them in turn.</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span>
@@ -638,7 +640,7 @@
 <span class="sd">           Added `raseed` keyword argument.</span>
 
 <span class="sd">    .. _`HOLE control parameters`:</span>
-<span class="sd">       http://s3.smartsci.uk/hole2/doc/old/hole_d03.html</span>
+<span class="sd">       http://www.holeprogram.org/doc/old/hole_d03.html</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#: Maximum number of characters in a filename (limitation of HOLE)</span>
@@ -890,7 +892,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dcd</span><span class="p">:</span>
             <span class="c1"># CHARMD -- DCD (matches COORD)</span>
             <span class="c1"># CHARMS int int -- ignore_first_N_frames   skip_every_X_frames</span>
-            <span class="c1">#        http://s3.smartsci.uk/hole2/doc/old/hole_d03.html#CHARMD</span>
+            <span class="c1">#        http://www.holeprogram.org/doc/old/hole_d03.html#CHARMD</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">template</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">CHARMD </span><span class="si">%(dcd)s</span><span class="se">\n</span><span class="s2">CHARMS </span><span class="si">%(dcd_iniskip)d</span><span class="s2"> </span><span class="si">%(dcd_step)d</span><span class="se">\n</span><span class="s2">&quot;</span>
 
         <span class="c1"># sanity checks</span>
@@ -1021,11 +1023,11 @@
 <span class="sd">        pore radius &lt; 2.30 Å) are green and wide areas (pore radius &gt; 2.30 Å</span>
 <span class="sd">        are blue).</span>
 
-<span class="sd">        .. _`Visualization of HOLE results`: http://s3.smartsci.uk/hole2/doc/index.html#_producing_a_triangulated_surface_and_visualizing_in_vmd</span>
-<span class="sd">        .. _`sph_process`: http://s3.smartsci.uk/hole2/doc/old/hole_d04.html#sph_process</span>
+<span class="sd">        .. _`Visualization of HOLE results`: http://www.holeprogram.org/doc/index.html#_producing_a_triangulated_surface_and_visualizing_in_vmd</span>
+<span class="sd">        .. _`sph_process`: http://www.holeprogram.org/doc/old/hole_d04.html#sph_process</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># not sure how this works when run on multiple frames...</span>
-        <span class="c1"># see http://s3.smartsci.uk/hole2/doc/old/hole_d04.html#sph_process</span>
+        <span class="c1"># see http://www.holeprogram.org/doc/old/hole_d04.html#sph_process</span>
         <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;dotden&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dotden</span><span class="p">)</span>
 
         <span class="n">fd</span><span class="p">,</span> <span class="n">tmp_sos</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.sos&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
