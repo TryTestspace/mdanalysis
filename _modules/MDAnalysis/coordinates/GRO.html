@@ -74,6 +74,26 @@
 <span class="sd">`GRO format`_ which includes a conversion routine for the box.</span>
 
 
+<span class="sd">Writing GRO files</span>
+<span class="sd">-----------------</span>
+
+<span class="sd">By default any written GRO files will renumber the atom ids to move sequentially</span>
+<span class="sd">from 1.  This can be disabled, and instead the original atom ids kept, by</span>
+<span class="sd">using the `reindex=False` keyword argument.  This is useful when writing a</span>
+<span class="sd">subsection of a larger Universe while wanting to preserve the original</span>
+<span class="sd">identities of atoms.</span>
+
+<span class="sd">For example::</span>
+
+<span class="sd">   &gt;&gt;&gt; u = mda.Universe()`</span>
+
+<span class="sd">   &gt;&gt;&gt; u.atoms.write(&#39;out.gro&#39;, reindex=False)</span>
+
+<span class="sd">   # OR</span>
+<span class="sd">   &gt;&gt;&gt; with mda.Writer(&#39;out.gro&#39;, reindex=False) as w:</span>
+<span class="sd">   ...     w.write(u.atoms)</span>
+
+
 <span class="sd">Classes</span>
 <span class="sd">-------</span>
 
@@ -293,6 +313,9 @@
 <span class="sd">       Removed the `convert_dimensions_to_unitcell` method,</span>
 <span class="sd">       use `Timestep.triclinic_dimensions` instead.</span>
 <span class="sd">       Now now writes velocities where possible.</span>
+<span class="sd">    .. versionchanged:: 0.17.1</span>
+<span class="sd">       Added `reindex` keyword argument to allow original atom</span>
+<span class="sd">       ids to be kept.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;GRO&#39;</span>
@@ -325,9 +348,32 @@
 <span class="sd">        convert_units : str (optional)</span>
 <span class="sd">            units are converted to the MDAnalysis base format; ``None`` selects</span>
 <span class="sd">            the value of :data:`MDAnalysis.core.flags` [&#39;convert_lengths&#39;]</span>
+
+<span class="sd">        reindex : bool (optional)</span>
+<span class="sd">            By default, all the atoms were reindexed to have a atom id starting</span>
+<span class="sd">            from 1. [``True``] However, this behaviour can be turned off by</span>
+<span class="sd">            specifying `reindex` ``=False``.</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        To use the reindex keyword, user can follow the two examples given</span>
+<span class="sd">        below.::</span>
+
+<span class="sd">           u = mda.Universe()</span>
+
+<span class="sd">        Usage 1::</span>
+
+<span class="sd">           u.atoms.write(&#39;out.gro&#39;, reindex=False)</span>
+
+<span class="sd">        Usage 2::</span>
+
+<span class="sd">           with mda.Writer(&#39;out.gro&#39;, reindex=False) as w:</span>
+<span class="sd">               w.write(u.atoms)</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">filename</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="s1">&#39;gro&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_atoms</span> <span class="o">=</span> <span class="n">n_atoms</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reindex</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;reindex&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">convert_units</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">convert_units</span> <span class="o">=</span> <span class="n">flags</span><span class="p">[</span><span class="s1">&#39;convert_lengths&#39;</span><span class="p">]</span>
@@ -390,6 +436,15 @@
         <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="n">NoDataError</span><span class="p">):</span>
             <span class="n">resids</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">cycle</span><span class="p">((</span><span class="mi">1</span><span class="p">,))</span>
             <span class="n">missing_topology</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;resids&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">reindex</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">atom_indices</span> <span class="o">=</span> <span class="n">ag_or_ts</span><span class="o">.</span><span class="n">ids</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="n">NoDataError</span><span class="p">):</span>
+                <span class="n">atom_indices</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ag_or_ts</span><span class="o">.</span><span class="n">n_atoms</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">missing_topology</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;ids&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">atom_indices</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ag_or_ts</span><span class="o">.</span><span class="n">n_atoms</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">missing_topology</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                 <span class="s2">&quot;Supplied AtomGroup was missing the following attributes: &quot;</span>
@@ -423,7 +478,7 @@
             <span class="c1"># all attributes could be infinite cycles!</span>
             <span class="k">for</span> <span class="n">atom_index</span><span class="p">,</span> <span class="n">resid</span><span class="p">,</span> <span class="n">resname</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
                     <span class="nb">range</span><span class="p">(</span><span class="n">ag_or_ts</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">),</span> <span class="n">resids</span><span class="p">,</span> <span class="n">resnames</span><span class="p">,</span> <span class="n">names</span><span class="p">):</span>
-                <span class="n">truncated_atom_index</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">ltruncate_int</span><span class="p">(</span><span class="n">atom_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+                <span class="n">truncated_atom_index</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">ltruncate_int</span><span class="p">(</span><span class="n">atom_indices</span><span class="p">[</span><span class="n">atom_index</span><span class="p">],</span> <span class="mi">5</span><span class="p">)</span>
                 <span class="n">truncated_resid</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">ltruncate_int</span><span class="p">(</span><span class="n">resid</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">has_velocities</span><span class="p">:</span>
                     <span class="n">output_gro</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fmt</span><span class="p">[</span><span class="s1">&#39;xyz_v&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>

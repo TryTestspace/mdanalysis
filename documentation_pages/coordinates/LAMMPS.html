@@ -65,8 +65,13 @@ not true then the user <em>should supply the appropriate units</em> in the
 keywords <em>timeunit</em> and/or <em>lengthunit</em> to <a class="reference internal" href="#MDAnalysis.coordinates.LAMMPS.DCDWriter" title="MDAnalysis.coordinates.LAMMPS.DCDWriter"><code class="xref py py-class docutils literal"><span class="pre">DCDWriter</span></code></a> and
 <a class="reference internal" href="../core/universe.html#MDAnalysis.core.universe.Universe" title="MDAnalysis.core.universe.Universe"><code class="xref py py-class docutils literal"><span class="pre">Universe</span></code></a> (which then calls
 <a class="reference internal" href="#MDAnalysis.coordinates.LAMMPS.DCDReader" title="MDAnalysis.coordinates.LAMMPS.DCDReader"><code class="xref py py-class docutils literal"><span class="pre">DCDReader</span></code></a>).</p>
+<div class="section" id="data-file-formats">
+<h2>6.9.1. Data file formats<a class="headerlink" href="#data-file-formats" title="Permalink to this headline">¶</a></h2>
+<p>By default either the <cite>atomic</cite> or <cite>full</cite> atom styles are expected,
+however this can be customised, see <a class="reference internal" href="../topology/LAMMPSParser.html#atom-style-kwarg"><span class="std std-ref">Atom styles</span></a>.</p>
+</div>
 <div class="section" id="example-loading-a-lammps-simulation">
-<h2>6.9.1. Example: Loading a LAMMPS simulation<a class="headerlink" href="#example-loading-a-lammps-simulation" title="Permalink to this headline">¶</a></h2>
+<h2>6.9.2. Example: Loading a LAMMPS simulation<a class="headerlink" href="#example-loading-a-lammps-simulation" title="Permalink to this headline">¶</a></h2>
 <p>To load a LAMMPS simulation from a LAMMPS data file (using the
 <a class="reference internal" href="../topology/LAMMPSParser.html#MDAnalysis.topology.LAMMPSParser.DATAParser" title="MDAnalysis.topology.LAMMPSParser.DATAParser"><code class="xref py py-class docutils literal"><span class="pre">DATAParser</span></code></a>) together with a
 LAMMPS DCD with “<em>real</em>” provide the keyword <em>format=”LAMMPS</em>”:</p>
@@ -96,7 +101,7 @@ for other recognized values and the documentation for the LAMMPS
 </div>
 </div>
 <div class="section" id="classes">
-<h2>6.9.2. Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<h2>6.9.3. Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="MDAnalysis.coordinates.LAMMPS.DCDReader">
 <em class="property">class </em><code class="descclassname">MDAnalysis.coordinates.LAMMPS.</code><code class="descname">DCDReader</code><span class="sig-paren">(</span><em>dcdfilename</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/MDAnalysis/coordinates/LAMMPS.html#DCDReader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MDAnalysis.coordinates.LAMMPS.DCDReader" title="Permalink to this definition">¶</a></dt>
@@ -2027,8 +2032,9 @@ included.</p>
 <li class="toctree-l2"><a class="reference internal" href="GRO.html">6.7. GRO file format — <code class="docutils literal"><span class="pre">MDAnalysis.coordinates.GRO</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="INPCRD.html">6.8. INPCRD structure files in MDAnalysis — <code class="docutils literal"><span class="pre">MDAnalysis.coordinates.INPCRD</span></code></a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">6.9. LAMMPS DCD trajectory and DATA I/O  — <code class="docutils literal"><span class="pre">MDAnalysis.coordinates.LAMMPS</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#example-loading-a-lammps-simulation">6.9.1. Example: Loading a LAMMPS simulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#classes">6.9.2. Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-file-formats">6.9.1. Data file formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-loading-a-lammps-simulation">6.9.2. Example: Loading a LAMMPS simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#classes">6.9.3. Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="MMTF.html">6.10. MMTF trajectory reader — <code class="docutils literal"><span class="pre">MDAnalysis.coordinates.MMTF</span></code></a></li>

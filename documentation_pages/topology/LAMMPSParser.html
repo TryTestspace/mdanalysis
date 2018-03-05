@@ -47,20 +47,41 @@
             
   <span class="target" id="module-MDAnalysis.topology.LAMMPSParser"></span><div class="section" id="lammpsparser">
 <h1>5.8. LAMMPSParser<a class="headerlink" href="#lammpsparser" title="Permalink to this headline">¶</a></h1>
-<p>Parses data files for <a class="reference external" href="http://lammps.sandia.gov/">LAMMPS</a>.</p>
+<p>Parses <a class="reference external" href="DATAfileformat::http://lammps.sandia.gov/doc/2001/data_format.html">data</a> files produced by <a class="reference external" href="http://lammps.sandia.gov/">LAMMPS</a>.</p>
+<div class="section" id="atom-styles">
+<span id="atom-style-kwarg"></span><h2>5.8.1. Atom styles<a class="headerlink" href="#atom-styles" title="Permalink to this headline">¶</a></h2>
+<p>By default parsers and readers for Lammps data files expect either an
+<em>atomic</em> or <em>full</em> <a class="reference external" href="http://lammps.sandia.gov/doc/atom_style.html">atom_style</a>.  This can be customised by passing
+the <cite>atom_style</cite> keyword argument.  This should be a space separated
+string indicating the position of the <cite>id</cite>, <cite>type</cite>, <cite>resid</cite>, <cite>charge</cite>,
+<cite>x</cite>, <cite>y</cite> and <cite>z</cite> fields.  The <cite>resid</cite> and <cite>charge</cite> fields are optional
+and any other specified field will be ignored.</p>
+<p>For example to read a file with the following format, where there is no resid:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Atoms</span> <span class="c1"># atomic</span>
+
+<span class="mi">1</span> <span class="mi">1</span> <span class="mf">3.7151744275286681e+01</span> <span class="mf">1.8684434743140471e+01</span> <span class="mf">1.9285127961842125e+01</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>The following code could be used:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="s1">&#39;myfile.data&#39;</span><span class="p">,</span> <span class="n">atom_style</span><span class="o">=</span><span class="s1">&#39;id type x y z&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="classes">
-<h2>5.8.1. Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<h2>5.8.2. Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="MDAnalysis.topology.LAMMPSParser.DATAParser">
 <em class="property">class </em><code class="descclassname">MDAnalysis.topology.LAMMPSParser.</code><code class="descname">DATAParser</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/MDAnalysis/topology/LAMMPSParser.html#DATAParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MDAnalysis.topology.LAMMPSParser.DATAParser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a LAMMPS DATA file for topology and coordinates.</p>
-<p>Note that <a class="reference external" href="http://lammps.sandia.gov/">LAMMPS</a> DATA files can be used standalone.</p>
+<p>Note that LAMMPS DATA files can be used standalone.</p>
 <p>Both topology and coordinate parsing functionality is kept in this
 class as the topology and coordinate reader share many common
 functions</p>
-<p>The parser implements the <a class="reference external" href=":http://lammps.sandia.gov/doc/2001/data_format.html">LAMMPS DATA file format</a> but only for
-the LAMMPS <a class="reference external" href="http://lammps.sandia.gov/doc/atom_style.html">atom_style</a> <em>full</em> (numeric ids 7, 10) and
-<em>molecular</em> (6, 9).</p>
+<p>By default the parser expects either <em>atomic</em> or <em>full</em> <cite>atom_style</cite>
+however this can be by passing an <cite>atom_style</cite> keyword argument,
+see <a class="reference internal" href="#atom-style-kwarg"><span class="std std-ref">Atom styles</span></a>.</p>
 <div class="versionadded">
 <p><span class="versionmodified">New in version 0.9.0.</span></p>
 </div>
@@ -337,7 +358,7 @@ is avoided.</p>
 
 <dl class="method">
 <dt id="MDAnalysis.topology.LAMMPSParser.DATAParser.read_DATA_timestep">
-<code class="descname">read_DATA_timestep</code><span class="sig-paren">(</span><em>n_atoms</em>, <em>TS_class</em>, <em>TS_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/MDAnalysis/topology/LAMMPSParser.html#DATAParser.read_DATA_timestep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MDAnalysis.topology.LAMMPSParser.DATAParser.read_DATA_timestep" title="Permalink to this definition">¶</a></dt>
+<code class="descname">read_DATA_timestep</code><span class="sig-paren">(</span><em>n_atoms</em>, <em>TS_class</em>, <em>TS_kwargs</em>, <em>atom_style=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/MDAnalysis/topology/LAMMPSParser.html#DATAParser.read_DATA_timestep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MDAnalysis.topology.LAMMPSParser.DATAParser.read_DATA_timestep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a DATA file and try and extract x, v, box.</p>
 <ul class="simple">
 <li>positions</li>
@@ -348,13 +369,16 @@ is avoided.</p>
 <div class="versionadded">
 <p><span class="versionmodified">New in version 0.9.0.</span></p>
 </div>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 0.17.1: </span>Added atom_style kwarg</p>
+</div>
 </dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="deprecated-classes">
-<h2>5.8.2. Deprecated classes<a class="headerlink" href="#deprecated-classes" title="Permalink to this headline">¶</a></h2>
+<h2>5.8.3. Deprecated classes<a class="headerlink" href="#deprecated-classes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="MDAnalysis.topology.LAMMPSParser.LAMMPSDataConverter">
 <em class="property">class </em><code class="descclassname">MDAnalysis.topology.LAMMPSParser.</code><code class="descname">LAMMPSDataConverter</code><span class="sig-paren">(</span><em>filename=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/MDAnalysis/topology/LAMMPSParser.html#LAMMPSDataConverter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MDAnalysis.topology.LAMMPSParser.LAMMPSDataConverter" title="Permalink to this definition">¶</a></dt>
@@ -440,8 +464,9 @@ from a data file “lammps.data” you can use:</p>
 <li class="toctree-l2"><a class="reference internal" href="GROParser.html">5.6. GRO topology parser</a></li>
 <li class="toctree-l2"><a class="reference internal" href="HoomdXMLParser.html">5.7. HOOMD XML topology parser</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">5.8. LAMMPSParser</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#classes">5.8.1. Classes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#deprecated-classes">5.8.2. Deprecated classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#atom-styles">5.8.1. Atom styles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#classes">5.8.2. Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deprecated-classes">5.8.3. Deprecated classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="MinimalParser.html">5.9. Minimal topology parser</a></li>

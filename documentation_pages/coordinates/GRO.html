@@ -49,8 +49,26 @@
 <h1>6.7. GRO file format — <a class="reference internal" href="#module-MDAnalysis.coordinates.GRO" title="MDAnalysis.coordinates.GRO"><code class="xref py py-mod docutils literal"><span class="pre">MDAnalysis.coordinates.GRO</span></code></a><a class="headerlink" href="#gro-file-format-mdanalysis-coordinates-gro" title="Permalink to this headline">¶</a></h1>
 <p>Classes to read and write <a class="reference external" href="http://www.gromacs.org">Gromacs</a> <a class="reference external" href="http://manual.gromacs.org/current/online/gro.html">GRO</a> coordinate files; see the notes on the
 <a class="reference external" href="http://chembytes.wikidot.com/g-grofile">GRO format</a> which includes a conversion routine for the box.</p>
+<div class="section" id="writing-gro-files">
+<h2>6.7.1. Writing GRO files<a class="headerlink" href="#writing-gro-files" title="Permalink to this headline">¶</a></h2>
+<p>By default any written GRO files will renumber the atom ids to move sequentially
+from 1.  This can be disabled, and instead the original atom ids kept, by
+using the <cite>reindex=False</cite> keyword argument.  This is useful when writing a
+subsection of a larger Universe while wanting to preserve the original
+identities of atoms.</p>
+<p>For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>&gt;&gt;&gt; u = mda.Universe()`
+
+&gt;&gt;&gt; u.atoms.write(&#39;out.gro&#39;, reindex=False)
+
+# OR
+&gt;&gt;&gt; with mda.Writer(&#39;out.gro&#39;, reindex=False) as w:
+...     w.write(u.atoms)
+</pre></div>
+</div>
+</div>
 <div class="section" id="classes">
-<h2>6.7.1. Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<h2>6.7.2. Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="MDAnalysis.coordinates.GRO.Timestep">
 <em class="property">class </em><code class="descclassname">MDAnalysis.coordinates.GRO.</code><code class="descname">Timestep</code><span class="sig-paren">(</span><em>n_atoms</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/MDAnalysis/coordinates/GRO.html#Timestep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MDAnalysis.coordinates.GRO.Timestep" title="Permalink to this definition">¶</a></dt>
@@ -155,6 +173,10 @@ Removed the <cite>convert_dimensions_to_unitcell</cite> method,
 use <cite>Timestep.triclinic_dimensions</cite> instead.
 Now now writes velocities where possible.</p>
 </div>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 0.17.1: </span>Added <cite>reindex</cite> keyword argument to allow original atom
+ids to be kept.</p>
+</div>
 <p>Set up a GROWriter with a precision of 3 decimal places.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -165,11 +187,31 @@ Now now writes velocities where possible.</p>
 <li><strong>n_atoms</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a><em> (</em><em>optional</em><em>)</em>) – number of atoms</li>
 <li><strong>convert_units</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – units are converted to the MDAnalysis base format; <code class="docutils literal"><span class="pre">None</span></code> selects
 the value of <code class="xref py py-data docutils literal"><span class="pre">MDAnalysis.core.flags</span></code> [‘convert_lengths’]</li>
+<li><strong>reindex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a><em> (</em><em>optional</em><em>)</em>) – By default, all the atoms were reindexed to have a atom id starting
+from 1. [<code class="docutils literal"><span class="pre">True</span></code>] However, this behaviour can be turned off by
+specifying <cite>reindex</cite> <code class="docutils literal"><span class="pre">=False</span></code>.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>To use the reindex keyword, user can follow the two examples given
+below.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">u</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Usage 1:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">u</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;out.gro&#39;</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Usage 2:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">mda</span><span class="o">.</span><span class="n">Writer</span><span class="p">(</span><span class="s1">&#39;out.gro&#39;</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+    <span class="n">w</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">atoms</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 <dl class="attribute">
 <dt id="MDAnalysis.coordinates.GRO.GROWriter.fmt">
 <code class="descname">fmt</code><em class="property"> = {'box_orthorhombic': '{box[0]:10.5f}{box[1]:10.5f}{box[2]:10.5f}\n', 'box_triclinic': '{box[0]:10.5f}{box[4]:10.5f}{box[8]:10.5f}{box[1]:10.5f}{box[2]:10.5f}{box[3]:10.5f}{box[5]:10.5f}{box[6]:10.5f}{box[7]:10.5f}\n', 'n_atoms': '{0:5d}\n', 'xyz': '{resid:&gt;5d}{resname:&lt;5.5s}{name:&gt;5.5s}{index:&gt;5d}{pos[0]:8.3f}{pos[1]:8.3f}{pos[2]:8.3f}\n', 'xyz_v': '{resid:&gt;5d}{resname:&lt;5.5s}{name:&gt;5.5s}{index:&gt;5d}{pos[0]:8.3f}{pos[1]:8.3f}{pos[2]:8.3f}{vel[0]:8.4f}{vel[1]:8.4f}{vel[2]:8.4f}\n'}</em><a class="headerlink" href="#MDAnalysis.coordinates.GRO.GROWriter.fmt" title="Permalink to this definition">¶</a></dt>
@@ -207,7 +249,7 @@ routine will chop off the leading digits.</p>
 
 </div>
 <div class="section" id="developer-notes-growriter-format-strings">
-<h2>6.7.2. Developer notes: <code class="docutils literal"><span class="pre">GROWriter</span></code> format strings<a class="headerlink" href="#developer-notes-growriter-format-strings" title="Permalink to this headline">¶</a></h2>
+<h2>6.7.3. Developer notes: <code class="docutils literal"><span class="pre">GROWriter</span></code> format strings<a class="headerlink" href="#developer-notes-growriter-format-strings" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference internal" href="#MDAnalysis.coordinates.GRO.GROWriter" title="MDAnalysis.coordinates.GRO.GROWriter"><code class="xref py py-class docutils literal"><span class="pre">GROWriter</span></code></a> class has a <a class="reference internal" href="#MDAnalysis.coordinates.GRO.GROWriter.fmt" title="MDAnalysis.coordinates.GRO.GROWriter.fmt"><code class="xref py py-attr docutils literal"><span class="pre">GROWriter.fmt</span></code></a> attribute, which is a dictionary of different
 strings for writing lines in <code class="docutils literal"><span class="pre">.gro</span></code> files.  These are as follows:</p>
 <dl class="docutils">
@@ -287,8 +329,9 @@ gromacs order is done automatically.</dd>
 <li class="toctree-l2"><a class="reference internal" href="DMS.html">6.5. DESRES file format — <code class="docutils literal"><span class="pre">MDAnalysis.coordinates.DMS</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="GMS.html">6.6. GAMESS trajectory reader — <code class="docutils literal"><span class="pre">MDAnalysis.coordinates.GMS</span></code></a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">6.7. GRO file format — <code class="docutils literal"><span class="pre">MDAnalysis.coordinates.GRO</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#classes">6.7.1. Classes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#developer-notes-growriter-format-strings">6.7.2. Developer notes: <code class="docutils literal"><span class="pre">GROWriter</span></code> format strings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#writing-gro-files">6.7.1. Writing GRO files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#classes">6.7.2. Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#developer-notes-growriter-format-strings">6.7.3. Developer notes: <code class="docutils literal"><span class="pre">GROWriter</span></code> format strings</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="INPCRD.html">6.8. INPCRD structure files in MDAnalysis — <code class="docutils literal"><span class="pre">MDAnalysis.coordinates.INPCRD</span></code></a></li>

@@ -91,6 +91,13 @@
 <span class="sd">:class:`~MDAnalysis.core.universe.Universe` (which then calls</span>
 <span class="sd">:class:`DCDReader`).</span>
 
+<span class="sd">Data file formats</span>
+<span class="sd">-----------------</span>
+
+<span class="sd">By default either the `atomic` or `full` atom styles are expected,</span>
+<span class="sd">however this can be customised, see :ref:`atom_style_kwarg`.</span>
+
+
 <span class="sd">Example: Loading a LAMMPS simulation</span>
 <span class="sd">------------------------------------</span>
 
@@ -234,12 +241,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">n_atoms</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;n_atoms&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_atoms</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># this should be done by parsing DATA first</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;DATAReader requires n_atoms keyword&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom_style</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;atom_style&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">DATAReader</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_read_first_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">with</span> <span class="n">DATAParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">read_DATA_timestep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Timestep</span><span class="p">,</span>
-                                           <span class="bp">self</span><span class="o">.</span><span class="n">_ts_kwargs</span><span class="p">)</span>
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">_ts_kwargs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom_style</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">ts</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_units</span><span class="p">:</span>

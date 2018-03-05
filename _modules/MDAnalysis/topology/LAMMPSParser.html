@@ -70,9 +70,39 @@
 <span class="sd">LAMMPSParser</span>
 <span class="sd">============</span>
 
-<span class="sd">Parses data files for LAMMPS_.</span>
+<span class="sd">Parses data_ files produced by LAMMPS_.</span>
 
 <span class="sd">.. _LAMMPS: http://lammps.sandia.gov/</span>
+<span class="sd">.. _data: DATA file format: :http://lammps.sandia.gov/doc/2001/data_format.html</span>
+
+
+<span class="sd">.. _atom_style_kwarg:</span>
+
+<span class="sd">Atom styles</span>
+<span class="sd">-----------</span>
+
+<span class="sd">By default parsers and readers for Lammps data files expect either an</span>
+<span class="sd">*atomic* or *full* `atom_style`_.  This can be customised by passing</span>
+<span class="sd">the `atom_style` keyword argument.  This should be a space separated</span>
+<span class="sd">string indicating the position of the `id`, `type`, `resid`, `charge`,</span>
+<span class="sd">`x`, `y` and `z` fields.  The `resid` and `charge` fields are optional</span>
+<span class="sd">and any other specified field will be ignored.</span>
+
+<span class="sd">For example to read a file with the following format, where there is no resid::</span>
+
+<span class="sd">  Atoms # atomic</span>
+
+<span class="sd">  1 1 3.7151744275286681e+01 1.8684434743140471e+01 1.9285127961842125e+01 0 0 0</span>
+
+
+<span class="sd">The following code could be used::</span>
+
+<span class="sd">  &gt;&gt;&gt; import MDAnalysis as mda</span>
+<span class="sd">  &gt;&gt;&gt;</span>
+<span class="sd">  &gt;&gt;&gt; u = mda.Universe(&#39;myfile.data&#39;, atom_style=&#39;id type x y z&#39;)</span>
+
+
+<span class="sd">.. _`atom_style`: http://lammps.sandia.gov/doc/atom_style.html</span>
 
 <span class="sd">Classes</span>
 <span class="sd">-------</span>
@@ -186,18 +216,15 @@
 <div class="viewcode-block" id="DATAParser"><a class="viewcode-back" href="../../../documentation_pages/topology/LAMMPSParser.html#MDAnalysis.topology.LAMMPSParser.DATAParser">[docs]</a><span class="k">class</span> <span class="nc">DATAParser</span><span class="p">(</span><span class="n">TopologyReaderBase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Parse a LAMMPS DATA file for topology and coordinates.</span>
 
-<span class="sd">    Note that LAMMPS_ DATA files can be used standalone.</span>
+<span class="sd">    Note that LAMMPS DATA files can be used standalone.</span>
 
 <span class="sd">    Both topology and coordinate parsing functionality is kept in this</span>
 <span class="sd">    class as the topology and coordinate reader share many common</span>
 <span class="sd">    functions</span>
 
-<span class="sd">    The parser implements the `LAMMPS DATA file format`_ but only for</span>
-<span class="sd">    the LAMMPS `atom_style`_ *full* (numeric ids 7, 10) and</span>
-<span class="sd">    *molecular* (6, 9).</span>
-
-<span class="sd">    .. _LAMMPS DATA file format: :http://lammps.sandia.gov/doc/2001/data_format.html</span>
-<span class="sd">    .. _`atom_style`: http://lammps.sandia.gov/doc/atom_style.html</span>
+<span class="sd">    By default the parser expects either *atomic* or *full* `atom_style`</span>
+<span class="sd">    however this can be by passing an `atom_style` keyword argument,</span>
+<span class="sd">    see :ref:`atom_style_kwarg`.</span>
 
 <span class="sd">    .. versionadded:: 0.9.0</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -236,6 +263,43 @@
 
         <span class="k">return</span> <span class="n">header</span><span class="p">,</span> <span class="n">sects</span></div>
 
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_interpret_atom_style</span><span class="p">(</span><span class="n">atom_style</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Transform a string description of atom style into a dict</span>
+
+<span class="sd">        Required fields: id, type, x, y, z</span>
+<span class="sd">        Optional fields: resid, charge</span>
+
+<span class="sd">        eg: &quot;id resid type charge x y z&quot;</span>
+<span class="sd">        {&#39;id&#39;: 0,</span>
+<span class="sd">         &#39;resid&#39;: 1,</span>
+<span class="sd">         &#39;type&#39;: 2,</span>
+<span class="sd">         &#39;charge&#39;: 3,</span>
+<span class="sd">         &#39;x&#39;: 4,</span>
+<span class="sd">         &#39;y&#39;: 5,</span>
+<span class="sd">         &#39;z&#39;: 6,</span>
+<span class="sd">        }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">style_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">atom_style</span> <span class="o">=</span> <span class="n">atom_style</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;resid&#39;</span><span class="p">,</span> <span class="s1">&#39;charge&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">location</span> <span class="o">=</span> <span class="n">atom_style</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">style_dict</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">location</span>
+
+        <span class="n">reqd_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]</span>
+        <span class="n">missing_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">attr</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">reqd_attrs</span> <span class="k">if</span> <span class="n">attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">style_dict</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">missing_attrs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;atom_style string missing required field(s): </span><span class="si">{}</span><span class="s2">&quot;</span>
+                             <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing_attrs</span><span class="p">)))</span>
+                
+        <span class="k">return</span> <span class="n">style_dict</span>
+    
 <div class="viewcode-block" id="DATAParser.parse"><a class="viewcode-back" href="../../../documentation_pages/topology/LAMMPSParser.html#MDAnalysis.topology.LAMMPSParser.DATAParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Parses a LAMMPS_ DATA file.</span>
 
@@ -244,7 +308,10 @@
 <span class="sd">        MDAnalysis Topology object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Can pass atom_style to help parsing</span>
-        <span class="n">atom_style</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;atom_style&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">style_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interpret_atom_style</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;atom_style&#39;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">style_dict</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">head</span><span class="p">,</span> <span class="n">sects</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grab_datafile</span><span class="p">()</span>
 
@@ -253,10 +320,17 @@
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="n">masses</span> <span class="o">=</span> <span class="kc">None</span>
 
+        <span class="k">if</span> <span class="s1">&#39;Atoms&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sects</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Data file was missing Atoms section&quot;</span><span class="p">)</span>
+
         <span class="k">try</span><span class="p">:</span>
             <span class="n">top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_atoms</span><span class="p">(</span><span class="n">sects</span><span class="p">[</span><span class="s1">&#39;Atoms&#39;</span><span class="p">],</span> <span class="n">masses</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Data file was missing Atoms section&quot;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Failed to parse atoms section.  You can supply a description &quot;</span>
+                <span class="s2">&quot;of the atom_style as a keyword argument, &quot;</span>
+                <span class="s2">&quot;eg mda.Universe(..., atom_style=&#39;id resid x y z&#39;)&quot;</span>
+            <span class="p">)</span>
 
         <span class="c1"># create mapping of id to index (ie atom id 10 might be the 0th atom)</span>
         <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="n">atom_id</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">atom_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">top</span><span class="o">.</span><span class="n">ids</span><span class="o">.</span><span class="n">values</span><span class="p">)}</span>
@@ -276,7 +350,8 @@
 
         <span class="k">return</span> <span class="n">top</span></div>
 
-<div class="viewcode-block" id="DATAParser.read_DATA_timestep"><a class="viewcode-back" href="../../../documentation_pages/topology/LAMMPSParser.html#MDAnalysis.topology.LAMMPSParser.DATAParser.read_DATA_timestep">[docs]</a>    <span class="k">def</span> <span class="nf">read_DATA_timestep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="n">TS_class</span><span class="p">,</span> <span class="n">TS_kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="DATAParser.read_DATA_timestep"><a class="viewcode-back" href="../../../documentation_pages/topology/LAMMPSParser.html#MDAnalysis.topology.LAMMPSParser.DATAParser.read_DATA_timestep">[docs]</a>    <span class="k">def</span> <span class="nf">read_DATA_timestep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="n">TS_class</span><span class="p">,</span> <span class="n">TS_kwargs</span><span class="p">,</span>
+                           <span class="n">atom_style</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Read a DATA file and try and extract x, v, box.</span>
 
 <span class="sd">        - positions</span>
@@ -286,15 +361,22 @@
 <span class="sd">        Fills this into the Timestep object and returns it</span>
 
 <span class="sd">        .. versionadded:: 0.9.0</span>
+<span class="sd">        .. versionchanged:: 0.17.1</span>
+<span class="sd">           Added atom_style kwarg</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">atom_style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">style_dict</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">style_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interpret_atom_style</span><span class="p">(</span><span class="n">atom_style</span><span class="p">)</span>
+        
         <span class="n">header</span><span class="p">,</span> <span class="n">sects</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grab_datafile</span><span class="p">()</span>
 
         <span class="n">unitcell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_box</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">positions</span><span class="p">,</span> <span class="n">ordering</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_pos</span><span class="p">(</span><span class="n">sects</span><span class="p">[</span><span class="s1">&#39;Atoms&#39;</span><span class="p">])</span>
-        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Position information not found&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Position information not found: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="s1">&#39;Velocities&#39;</span> <span class="ow">in</span> <span class="n">sects</span><span class="p">:</span>
             <span class="n">velocities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_vel</span><span class="p">(</span><span class="n">sects</span><span class="p">[</span><span class="s1">&#39;Velocities&#39;</span><span class="p">],</span> <span class="n">ordering</span><span class="p">)</span>
@@ -316,15 +398,22 @@
         <span class="c1"># but ugly because assumes lots of things, and Reader should be standalone</span>
         <span class="n">ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">style_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">datalines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+                <span class="n">style_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">style_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">style_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">style_dict</span>
+    
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">datalines</span><span class="p">):</span>
             <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-            <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-            <span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-            <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
-                <span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span>
-            <span class="k">elif</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
-                <span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+            <span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="n">style_dict</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]]</span>
+
+            <span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="p">[</span><span class="n">style_dict</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]],</span>
+                         <span class="n">line</span><span class="p">[</span><span class="n">style_dict</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]],</span>
+                         <span class="n">line</span><span class="p">[</span><span class="n">style_dict</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]]]</span>
 
         <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
@@ -409,14 +498,27 @@
 
         <span class="n">n_atoms</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">datalines</span><span class="p">)</span>
 
-        <span class="c1"># Fields per line</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">datalines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
-        <span class="n">has_charge</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span> <span class="k">else</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">style_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sd</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                  <span class="s1">&#39;resid&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                  <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+            <span class="c1"># Fields per line</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">datalines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+                <span class="n">sd</span><span class="p">[</span><span class="s1">&#39;charge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">style_dict</span>
+
+        <span class="n">has_charge</span> <span class="o">=</span> <span class="s1">&#39;charge&#39;</span> <span class="ow">in</span> <span class="n">sd</span>
+        <span class="n">has_resid</span> <span class="o">=</span> <span class="s1">&#39;resid&#39;</span> <span class="ow">in</span> <span class="n">sd</span>
 
         <span class="c1"># atom ids aren&#39;t necessarily sequential</span>
         <span class="n">atom_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_atoms</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
         <span class="n">types</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_atoms</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
-        <span class="n">resids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_atoms</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">has_resid</span><span class="p">:</span>
+            <span class="n">resids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_atoms</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">resids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_atoms</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">has_charge</span><span class="p">:</span>
             <span class="n">charges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_atoms</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
@@ -426,11 +528,12 @@
             <span class="c1"># these numpy array are already typed correctly,</span>
             <span class="c1"># so just pass the raw strings</span>
             <span class="c1"># and let numpy handle the conversion</span>
-            <span class="n">atom_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">resids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">atom_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="n">sd</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="n">has_resid</span><span class="p">:</span>
+                <span class="n">resids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="n">sd</span><span class="p">[</span><span class="s1">&#39;resid&#39;</span><span class="p">]]</span>
+            <span class="n">types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="n">sd</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]]</span>
             <span class="k">if</span> <span class="n">has_charge</span><span class="p">:</span>
-                <span class="n">charges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+                <span class="n">charges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="n">sd</span><span class="p">[</span><span class="s1">&#39;charge&#39;</span><span class="p">]]</span>
 
         <span class="c1"># at this point, we&#39;ve read the atoms section,</span>
         <span class="c1"># but it&#39;s still (potentially) unordered</span>
@@ -440,7 +543,8 @@
         <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">atom_ids</span><span class="p">)</span>
         <span class="n">atom_ids</span> <span class="o">=</span> <span class="n">atom_ids</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
         <span class="n">types</span> <span class="o">=</span> <span class="n">types</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
-        <span class="n">resids</span> <span class="o">=</span> <span class="n">resids</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">has_resid</span><span class="p">:</span>
+            <span class="n">resids</span> <span class="o">=</span> <span class="n">resids</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">has_charge</span><span class="p">:</span>
             <span class="n">charges</span> <span class="o">=</span> <span class="n">charges</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
 
